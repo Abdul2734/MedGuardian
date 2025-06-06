@@ -2,37 +2,43 @@ import streamlit as st
 import numpy as np
 import pickle
 
+st.set_page_config(page_title="MedGuardian - Diabetes Prediction", layout="centered")
+
+st.title(" MedGuardian - Diabetes Risk Prediction")
+
 # Load the model safely
 try:
-    model = pickle.load(open("model.pkl", "rb"))
+    with open("model.pkl", "rb") as f:
+        model = pickle.load(f)
 except Exception as e:
     model = None
-    st.error(f"⚠️ Error loading model: {e}")
-
-st.title("🧠 MedGuardian - Diabetes Risk Prediction")
+    st.error(f" Error loading model: {e}")
 
 # Input fields
-pregnancies = st.number_input("Pregnancies", 0)
-glucose = st.number_input("Glucose", 0)
-bp = st.number_input("Blood Pressure", 0)
-skin = st.number_input("Skin Thickness", 0)
-insulin = st.number_input("Insulin", 0)
-bmi = st.number_input("BMI", 0.0)
-dpf = st.number_input("Diabetes Pedigree Function", 0.0)
-age = st.number_input("Age", 0)
+pregnancies = st.number_input("Pregnancies", min_value=0)
+glucose = st.number_input("Glucose Level", min_value=0)
+bp = st.number_input("Blood Pressure", min_value=0)
+skin = st.number_input("Skin Thickness", min_value=0)
+insulin = st.number_input("Insulin Level", min_value=0)
+bmi = st.number_input("BMI", min_value=0.0, format="%.2f")
+dpf = st.number_input("Diabetes Pedigree Function", min_value=0.0, format="%.3f")
+age = st.number_input("Age", min_value=0)
 
-# Predict Button
+# Prediction Button
 if st.button("Predict"):
     if model is not None:
+        # Prepare input data for prediction
         input_data = np.array([[pregnancies, glucose, bp, skin, insulin, bmi, dpf, age]])
         prediction = model.predict(input_data)[0]
 
+        # Display result
         if prediction == 1:
-            st.error("🚨 High Risk of Diabetes!")
-            st.info("💡 Tip: Reduce sugar, exercise regularly, and consult your doctor.")
+            st.error("High Risk of Diabetes!")
+            st.info(" Tip: Reduce sugar, exercise regularly, and consult your doctor.")
         else:
-            st.success("✅ Low Risk of Diabetes")
+            st.success(" Low Risk of Diabetes")
             st.balloons()
-            st.info("🎉 Keep maintaining a healthy lifestyle!")
+            st.info(" Keep maintaining a healthy lifestyle!")
     else:
-        st.warning("⚠️ Model not loaded. Cannot make a prediction.")
+        st.warning("Model not loaded. Cannot make a prediction.")
+
