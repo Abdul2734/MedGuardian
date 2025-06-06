@@ -22,15 +22,18 @@ print("Current working directory:", os.getcwd())
 
 print("Files in the current directory:", os.listdir())
 
-try:
-    model = joblib.load("model.pkl")
-    print("Model loaded successfully!")
-except FileNotFoundError:
-    print("Error: 'model.pkl' not found in the current directory.")
-    print("Please ensure the file exists in the current directory or provide the full path.")
 
 import streamlit as st
+import joblib
 
+try:
+    model = joblib.load("model.pkl")
+except Exception as e:
+    st.error(f"Error loading model: {e}")
+    model = None
+
+
+import streamlit as st
 st.title("🩺 MedGuardian - Diabetes Risk Prediction")
 st.write("Enter your health details to check your diabetes risk.")
 
