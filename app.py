@@ -26,15 +26,13 @@ print("Files in the current directory:", os.listdir())
 import streamlit as st
 import joblib
 import numpy as np
-
 try:
     with open("model.pkl", "rb") as f:
         model = pickle.load(f)
 except Exception as e:
     model = None
-    st.error("❌ Error loading model:")
+    st.error(" Error loading model:")
     st.code(str(e))
-
 
 
 import streamlit as st
