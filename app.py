@@ -28,10 +28,13 @@ import joblib
 import numpy as np
 
 try:
-    model = joblib.load("model.pkl")
+    with open("model.pkl", "rb") as f:
+        model = pickle.load(f)
 except Exception as e:
-    st.error(f"Error loading model: {e}")
     model = None
+    st.error("❌ Error loading model:")
+    st.code(str(e))
+
 
 
 import streamlit as st
