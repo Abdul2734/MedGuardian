@@ -1,0 +1,38 @@
+import streamlit as st
+import numpy as np
+import pickle
+
+# Load the model safely
+try:
+    model = pickle.load(open("model.pkl", "rb"))
+except Exception as e:
+    model = None
+    st.error(f"⚠️ Error loading model: {e}")
+
+st.title("🧠 MedGuardian - Diabetes Risk Prediction")
+
+# Input fields
+pregnancies = st.number_input("Pregnancies", 0)
+glucose = st.number_input("Glucose", 0)
+bp = st.number_input("Blood Pressure", 0)
+skin = st.number_input("Skin Thickness", 0)
+insulin = st.number_input("Insulin", 0)
+bmi = st.number_input("BMI", 0.0)
+dpf = st.number_input("Diabetes Pedigree Function", 0.0)
+age = st.number_input("Age", 0)
+
+# Predict Button
+if st.button("Predict"):
+    if model is not None:
+        input_data = np.array([[pregnancies, glucose, bp, skin, insulin, bmi, dpf, age]])
+        prediction = model.predict(input_data)[0]
+
+        if prediction == 1:
+            st.error("🚨 High Risk of Diabetes!")
+            st.info("💡 Tip: Reduce sugar, exercise regularly, and consult your doctor.")
+        else:
+            st.success("✅ Low Risk of Diabetes")
+            st.balloons()
+            st.info("🎉 Keep maintaining a healthy lifestyle!")
+    else:
+        st.warning("⚠️ Model not loaded. Cannot make a prediction.")
