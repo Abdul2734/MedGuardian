@@ -44,18 +44,19 @@ dpf = st.number_input("Diabetes Pedigree Function", min_value=0.0, format="%.3f"
 age = st.number_input("Age", min_value=1, step=1)
 
 if st.button("Predict"):
-    input_data = np.array([[pregnancies, glucose, bp, skin, insulin, bmi, dpf, age]])
-    prediction = model.predict(input_data)[0]
+    if model is not None:
+        input_data = np.array([[pregnancies, glucose, bp, skin, insulin, bmi, dpf, age]])
+        prediction = model.predict(input_data)[0]
 
-    if prediction == 1:
-        st.error(" High Risk of Diabetes!")
-        st.info("Tip: Reduce sugar, exercise regularly, and consult your doctor.")
+        if prediction == 1:
+            st.error("High Risk of Diabetes!")
+            st.info(" Tip: Reduce sugar, exercise regularly, and consult your doctor.")
+        else:
+            st.success("Low Risk of Diabetes")
+            st.balloons()
+            st.info("Keep maintaining a healthy lifestyle!")
     else:
-        st.success("Low Risk of Diabetes")
-        st.balloons()
-        st.info(" Keep maintaining a healthy lifestyle!")
-else:
-    st.warning(' Model not loaded. cannot make a prediction')
+        st.warning(" Model not loaded. Cannot make a prediction.")
 
 st.markdown("---")
 st.caption(" This is an educational tool. For actual medical diagnosis, consult a doctor.")
